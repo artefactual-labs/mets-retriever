@@ -1,3 +1,7 @@
+# Project-specific
+mets_files/
+mets_retriever/mets.db
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
