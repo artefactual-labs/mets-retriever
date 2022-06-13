@@ -114,7 +114,13 @@ immediately.
 
 ### Testing
 
-Coming soon.
+To run all tests with tox: `tox`
+
+Or run tests directly with pytest:
+```bash
+pip install -r requirements/test.txt
+pytest
+```
 
 ### Publishing to PyPI
 
