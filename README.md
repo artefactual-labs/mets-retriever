@@ -2,7 +2,11 @@
 
 ## About
 
-CLI tool for bulk downloading [Archivematica][am] METS files
+CLI tool for bulk downloading [Archivematica][am] METS files.
+
+Unlike Gloria the flat-coated retriever mix, `mets-retriever` is all about fetching.
+
+![Gloria, the flat-coated retriever mix](media/gloria.jpg)
 
 ## Usage
 
