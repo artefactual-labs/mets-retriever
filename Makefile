@@ -1,4 +1,4 @@
-.PHONY: clean package package-deps package-source package-upload package-wheel
+.PHONY: package-deps package-source package-wheel package-check package-upload package clean
 
 package-deps:
 	pip install --upgrade twine wheel
