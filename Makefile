@@ -1,19 +1,16 @@
-.PHONY: package-deps package-source package-wheel package-check package-upload package clean
+.PHONY: package-deps package-build package-check package-upload package clean
 
 package-deps:
-	pip install --upgrade twine wheel
+	python3 -m pip install --upgrade build
 
-package-source:
-	python setup.py sdist
+package-build: package-deps
+	python3 -m build
 
-package-wheel: package-deps
-	python setup.py bdist_wheel --universal
-
-package-check: package-source package-wheel     ## Check the distribution is valid
-	twine check dist/*
+package-check: package-build     ## Check the distribution is valid
+	python3 -m twine check dist/*
 
 package-upload: package-deps package-check
-	twine upload dist/* --repository-url https://upload.pypi.org/legacy/
+	python3 -m twine upload dist/* --repository-url https://upload.pypi.org/legacy/
 
 package: package-upload
 
