@@ -128,7 +128,7 @@ class METSRetriever:
             if aip["status"] == "UPLOADED" and aip["replicated_package"] is None
         ]
 
-    def download_all_mets_files(self):
+    def download_all_mets_files(self, with_replicas_only=False):
         am = AMClient(
             ss_url=self.storage_service_url,
             ss_user_name=self.storage_service_username,
@@ -136,6 +136,10 @@ class METSRetriever:
         )
         aips = self._filter_aips(am.aips())
         for aip in aips:
+            if with_replicas_only:
+                if not aip.get("replicas"):
+                    continue
+
             aip_uuid = aip["uuid"]
             if not self.check_if_aip_in_database(aip_uuid):
                 try:

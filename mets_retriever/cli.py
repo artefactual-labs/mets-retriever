@@ -36,7 +36,12 @@ def retriever():
     is_flag=True,
     help="Write sidecar file for each METS with Storage Location and AIP replica UUIDs",
 )
-def get_mets_files(ss_url, ss_api_key, output_dir, sidecar):
+@click.option(
+    "--with-replicas-only",
+    is_flag=True,
+    help="Only retrieve METS for an AIP if a replica has also been stored",
+)
+def get_mets_files(ss_url, ss_api_key, output_dir, sidecar, with_replicas_only):
     """Fetch all METS files not already retrieved."""
     retriever = METSRetriever(
         storage_service_url=ss_url,
@@ -44,7 +49,7 @@ def get_mets_files(ss_url, ss_api_key, output_dir, sidecar):
         output_directory=output_dir,
         add_sidecar=sidecar,
     )
-    retriever.download_all_mets_files()
+    retriever.download_all_mets_files(with_replicas_only=with_replicas_only)
 
 
 @retriever.command("fetch-one")
