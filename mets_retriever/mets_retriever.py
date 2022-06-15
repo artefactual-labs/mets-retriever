@@ -59,9 +59,7 @@ class METSRetriever:
     def check_if_aip_in_database(self, uuid):
         """Check if AIP in database and return boolean."""
         matching_aip = self.session.query(AIP).filter_by(uuid=uuid).first()
-        if matching_aip:
-            return True
-        return False
+        return matching_aip is not None
 
     def add_aip_to_database(self, uuid):
         """Add AIP UUID to database."""
@@ -110,8 +108,7 @@ class METSRetriever:
         aips = self._filter_aips(am.aips())
         for aip in aips:
             aip_uuid = aip["uuid"]
-            aip_in_database = self.check_if_aip_in_database(aip_uuid)
-            if not aip_in_database:
+            if not self.check_if_aip_in_database(aip_uuid):
                 try:
                     self.download_mets_file(aip_uuid)
                     self.add_aip_to_database(aip_uuid)
