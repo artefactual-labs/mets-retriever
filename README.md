@@ -12,7 +12,15 @@ Unlike Gloria the flat-coated retriever mix, `mets-retriever` is all about fetch
 
 After installing with pip (see below), use the `retrieve-mets` command.
 
-`retrieve-mets` has two subcommands, `fetch-all` and `fetch-one`.
+`retrieve-mets` has two subcommands, `fetch-all` and `fetch-one`. Both
+subcommands have common arguments:
+
+* METS files are fetched to a directory specified with the `--output-dir`
+argument. If one is not provided, a `mets_files` directory will be created
+in the current directory and METS files will be written there.
+* Storage Service credentials must be included using the `--ss-url` and
+`--ss-api-key` arguments for both commands. By default these default to values
+from the Archivematica Docker development environment.
 
 ```
 Usage: retrieve-mets [OPTIONS] COMMAND [ARGS]...
