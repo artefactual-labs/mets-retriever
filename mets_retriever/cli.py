@@ -31,12 +31,18 @@ def retriever():
     default="mets_files",
     show_default=True,
 )
-def get_mets_files(ss_url, ss_api_key, output_dir):
+@click.option(
+    "--sidecar",
+    is_flag=True,
+    help="Write sidecar file for each METS with Storage Location and AIP replica UUIDs",
+)
+def get_mets_files(ss_url, ss_api_key, output_dir, sidecar):
     """Fetch all METS files not already retrieved."""
     retriever = METSRetriever(
         storage_service_url=ss_url,
         storage_service_api_key=ss_api_key,
         output_directory=output_dir,
+        add_sidecar=sidecar,
     )
     retriever.download_all_mets_files()
 
@@ -63,13 +69,19 @@ def get_mets_files(ss_url, ss_api_key, output_dir):
     default="mets_files",
     show_default=True,
 )
+@click.option(
+    "--sidecar",
+    is_flag=True,
+    help="Write sidecar file for each METS with Storage Location and AIP replica UUIDs",
+)
 @click.argument("aip-uuid")
-def get_mets_file(ss_url, ss_api_key, output_dir, aip_uuid):
+def get_mets_file(ss_url, ss_api_key, output_dir, sidecar, aip_uuid):
     """Fetch single METS file, even if it's already been retrieved."""
     retriever = METSRetriever(
         storage_service_url=ss_url,
         storage_service_api_key=ss_api_key,
         output_directory=output_dir,
+        add_sidecar=sidecar,
     )
     retriever.download_mets_file(aip_uuid)
 

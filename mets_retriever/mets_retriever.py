@@ -36,11 +36,13 @@ class METSRetriever:
         storage_service_api_key="test",
         storage_service_username="test",
         output_directory="mets_files",
+        add_sidecar=False,
     ):
         self.storage_service_url = storage_service_url
         self.storage_service_api_key = storage_service_api_key
         self.storage_service_username = storage_service_username
         self.output_directory = os.path.abspath(output_directory)
+        self.add_sidecar = add_sidecar
 
         self.init_db()
 
@@ -72,6 +74,30 @@ class METSRetriever:
         if not os.path.isfile(expected_path):
             raise OSError("METS file not found at expected path after downloading")
 
+    def write_sidecar_file(self, uuid):
+        """Write sidecar file containing information not in METS.
+
+        This file will have the same name as the METS file but with a .txt
+        extension and is written next to the METS file in the output directory.
+        """
+        am = AMClient(
+            ss_url=self.storage_service_url,
+            ss_user_name=self.storage_service_username,
+            ss_api_key=self.storage_service_api_key,
+            package_uuid=uuid,
+        )
+        details = am.get_package_details()
+        location_uuid = details.get("current_location")
+        replicas = details.get("replicas")
+
+        sidecar_file = os.path.join(self.output_directory, f"METS.{uuid}.txt")
+        with open(sidecar_file, "w") as sidecar:
+            sidecar.write(
+                "Storage location: {}\nAIP replicas: {}\n".format(
+                    location_uuid, ", ".join(replicas)
+                )
+            )
+
     def download_mets_file(self, uuid):
         """Download METS file with given UUID to self.output_directory."""
         am = AMClient(
@@ -88,6 +114,9 @@ class METSRetriever:
         am.extract_aip_mets_file()
 
         self._verify_download(os.path.join(self.output_directory, f"METS.{uuid}.xml"))
+
+        if self.add_sidecar:
+            self.write_sidecar_file(uuid)
 
         logger.info(f"Downloaded METS file METS.{uuid}.xml")
 

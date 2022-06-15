@@ -21,6 +21,10 @@ in the current directory and METS files will be written there.
 * Storage Service credentials must be included using the `--ss-url` and
 `--ss-api-key` arguments for both commands. By default these default to values
 from the Archivematica Docker development environment.
+* If the `--sidecar` flag is passed, a sidecar txt file will be written
+alongside each METS file in the output directory with additional metadata about
+the AIP not found in the METS file, namely, the storage location UUID and the
+UUIDs of any AIP replicas.
 
 ```
 Usage: retrieve-mets [OPTIONS] COMMAND [ARGS]...
@@ -60,6 +64,9 @@ Options:
                      http://127.0.0.1:62081; required]
   --ss-api-key TEXT  Storage Service API key  [default: test; required]
   --output-dir TEXT  Path to output directory  [default: mets_files; required]
+  --sidecar          Write sidecar file for each METS with Storage Location
+                     and AIP replica UUIDs
+
   --help             Show this message and exit.
 
 ```
@@ -85,6 +92,8 @@ Options:
                      http://127.0.0.1:62081; required]
   --ss-api-key TEXT  Storage Service API key  [default: test; required]
   --output-dir TEXT  Path to output directory  [default: mets_files; required]
+  --sidecar          Write sidecar file for each METS with Storage Location
+                     and AIP replica UUIDs
   --help             Show this message and exit.
 
 ```
