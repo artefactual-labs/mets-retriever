@@ -136,9 +136,8 @@ class METSRetriever:
         )
         aips = self._filter_aips(am.aips())
         for aip in aips:
-            if with_replicas_only:
-                if not aip.get("replicas"):
-                    continue
+            if with_replicas_only and not aip.get("replicas"):
+                continue
 
             aip_uuid = aip["uuid"]
             if not self.check_if_aip_in_database(aip_uuid):
