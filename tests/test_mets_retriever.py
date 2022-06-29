@@ -21,7 +21,7 @@ def test_database_helpers(retriever):
 
 
 @pytest.mark.parametrize(
-    "package_details, expected_output",
+    "package_details, replica_locations, expected_output",
     [
         # Test with multiple AIP replicas.
         (
@@ -32,7 +32,8 @@ def test_database_helpers(retriever):
                     "/api/v2/file/75426ade-38df-4736-a457-b219e5cadb3b/",
                 ],
             },
-            "Storage location: /api/v2/location/0c2be2cf-02b8-48ab-b264-75aef504289e/\nAIP replicas: /api/v2/file/2674e2c5-95a4-4058-b453-66983e47144d/, /api/v2/file/75426ade-38df-4736-a457-b219e5cadb3b/\n",
+            ["test-location-1", "test-location-2"],
+            "Storage location: /api/v2/location/0c2be2cf-02b8-48ab-b264-75aef504289e/\nAIP replicas: /api/v2/file/2674e2c5-95a4-4058-b453-66983e47144d/, /api/v2/file/75426ade-38df-4736-a457-b219e5cadb3b/\nAIP replica storage locations: test-location-1, test-location-2\n",
         ),
         # Test with one AIP replica.
         (
@@ -40,7 +41,8 @@ def test_database_helpers(retriever):
                 "current_location": "/api/v2/location/0c2be2cf-02b8-48ab-b264-75aef504289e/",
                 "replicas": ["/api/v2/file/2674e2c5-95a4-4058-b453-66983e47144d/"],
             },
-            "Storage location: /api/v2/location/0c2be2cf-02b8-48ab-b264-75aef504289e/\nAIP replicas: /api/v2/file/2674e2c5-95a4-4058-b453-66983e47144d/\n",
+            ["test-location"],
+            "Storage location: /api/v2/location/0c2be2cf-02b8-48ab-b264-75aef504289e/\nAIP replicas: /api/v2/file/2674e2c5-95a4-4058-b453-66983e47144d/\nAIP replica storage locations: test-location\n",
         ),
         # Test with no replicas.
         (
@@ -48,13 +50,21 @@ def test_database_helpers(retriever):
                 "current_location": "/api/v2/location/0c2be2cf-02b8-48ab-b264-75aef504289e/",
                 "replicas": [],
             },
-            "Storage location: /api/v2/location/0c2be2cf-02b8-48ab-b264-75aef504289e/\nAIP replicas: \n",
+            [],
+            "Storage location: /api/v2/location/0c2be2cf-02b8-48ab-b264-75aef504289e/\nAIP replicas: \nAIP replica storage locations: \n",
         ),
     ],
 )
-def test_write_sidecar_file(mocker, package_details, expected_output):
+def test_write_sidecar_file(
+    mocker, package_details, replica_locations, expected_output
+):
     get_package_details = mocker.patch("amclient.AMClient.get_package_details")
     get_package_details.return_value = package_details
+
+    get_replica_location = mocker.patch(
+        "mets_retriever.METSRetriever._get_replica_locations"
+    )
+    get_replica_location.return_value = replica_locations
 
     with tempfile.TemporaryDirectory() as output_dir:
         retriever = mets_retriever.METSRetriever(output_directory=output_dir)

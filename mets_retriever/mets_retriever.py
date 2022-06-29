@@ -74,6 +74,22 @@ class METSRetriever:
         if not os.path.isfile(expected_path):
             raise OSError("METS file not found at expected path after downloading")
 
+    def _get_replica_locations(self, replicas):
+        """Return list of AIP replica locations."""
+        replica_locations = []
+        for replica in replicas:
+            uuid = replica.replace("/api/v2/file/", "").rstrip("/")
+            am = AMClient(
+                ss_url=self.storage_service_url,
+                ss_user_name=self.storage_service_username,
+                ss_api_key=self.storage_service_api_key,
+                package_uuid=uuid,
+            )
+            details = am.get_package_details()
+            if details.get("current_location"):
+                replica_locations.append(details.get("current_location"))
+        return replica_locations
+
     def write_sidecar_file(self, uuid):
         """Write sidecar file containing information not in METS.
 
@@ -89,12 +105,13 @@ class METSRetriever:
         details = am.get_package_details()
         location_uuid = details.get("current_location")
         replicas = details.get("replicas")
+        replica_locations = self._get_replica_locations(replicas)
 
         sidecar_file = os.path.join(self.output_directory, f"METS.{uuid}.txt")
         with open(sidecar_file, "w") as sidecar:
             sidecar.write(
-                "Storage location: {}\nAIP replicas: {}\n".format(
-                    location_uuid, ", ".join(replicas)
+                "Storage location: {}\nAIP replicas: {}\nAIP replica storage locations: {}\n".format(
+                    location_uuid, ", ".join(replicas), ", ".join(replica_locations)
                 )
             )
 
