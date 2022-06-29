@@ -17,6 +17,8 @@ logger.addHandler(handler)
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 DATABASE_FILE = os.path.join(THIS_DIR, "mets.db")
 
+API_FILE_PREFIX = "/api/v2/file/"
+
 Base = declarative_base()
 
 
@@ -78,7 +80,7 @@ class METSRetriever:
         """Return list of AIP replica locations."""
         replica_locations = []
         for replica in replicas:
-            uuid = replica.replace("/api/v2/file/", "").rstrip("/")
+            uuid = replica.replace(API_FILE_PREFIX, "").rstrip("/")
             am = AMClient(
                 ss_url=self.storage_service_url,
                 ss_user_name=self.storage_service_username,
