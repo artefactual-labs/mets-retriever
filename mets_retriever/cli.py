@@ -18,6 +18,13 @@ def retriever():
     show_default=True,
 )
 @click.option(
+    "--ss-user-name",
+    required=True,
+    help="Storage Service username",
+    default="test",
+    show_default=True,
+)
+@click.option(
     "--ss-api-key",
     required=True,
     help="Storage Service API key",
@@ -41,11 +48,14 @@ def retriever():
     is_flag=True,
     help="Only retrieve METS for an AIP if a replica has also been stored",
 )
-def get_mets_files(ss_url, ss_api_key, output_dir, sidecar, with_replicas_only):
+def get_mets_files(
+    ss_url, ss_user_name, ss_api_key, output_dir, sidecar, with_replicas_only
+):
     """Fetch all METS files not already retrieved."""
     retriever = METSRetriever(
         storage_service_url=ss_url,
         storage_service_api_key=ss_api_key,
+        storage_service_username=ss_user_name,
         output_directory=output_dir,
         add_sidecar=sidecar,
     )
@@ -58,6 +68,13 @@ def get_mets_files(ss_url, ss_api_key, output_dir, sidecar, with_replicas_only):
     required=True,
     help="Storage Service host URL",
     default="http://127.0.0.1:62081",
+    show_default=True,
+)
+@click.option(
+    "--ss-user-name",
+    required=True,
+    help="Storage Service username",
+    default="test",
     show_default=True,
 )
 @click.option(
@@ -80,11 +97,12 @@ def get_mets_files(ss_url, ss_api_key, output_dir, sidecar, with_replicas_only):
     help="Write sidecar file for each METS with Storage Location and AIP replica UUIDs",
 )
 @click.argument("aip-uuid")
-def get_mets_file(ss_url, ss_api_key, output_dir, sidecar, aip_uuid):
+def get_mets_file(ss_url, ss_user_name, ss_api_key, output_dir, sidecar, aip_uuid):
     """Fetch single METS file, even if it's already been retrieved."""
     retriever = METSRetriever(
         storage_service_url=ss_url,
         storage_service_api_key=ss_api_key,
+        storage_service_username=ss_user_name,
         output_directory=output_dir,
         add_sidecar=sidecar,
     )
