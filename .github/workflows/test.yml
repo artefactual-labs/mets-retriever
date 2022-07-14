@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - "main"
+      - "dev/issue-1558-update-precommit-config"
 jobs:
   tox:
     name: "Test ${{ matrix.toxenv }}"

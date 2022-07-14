@@ -18,9 +18,9 @@ subcommands have some common arguments:
 * METS files are fetched to a directory specified with the `--output-dir`
 argument. If one is not provided, a `mets_files` directory will be created
 in the current directory and METS files will be written there.
-* Storage Service credentials must be included using the `--ss-url` and
-`--ss-api-key` arguments for both commands. By default these default to values
-from the Archivematica Docker development environment.
+* Storage Service credentials must be included using the `--ss-url`,
+`--ss-user-name`, and `--ss-api-key` arguments for both commands. By default
+these default to values from the Archivematica Docker development environment.
 * If the `--sidecar` flag is passed, a sidecar txt file will be written
 alongside each METS file in the output directory with additional metadata about
 the AIP not found in the METS file, namely, the storage location UUID and the
@@ -62,13 +62,15 @@ Usage: retrieve-mets fetch-all [OPTIONS]
 Options:
   --ss-url TEXT         Storage Service host URL  [default:
                         http://127.0.0.1:62081; required]
+  --ss-user-name TEXT   Storage Service username  [default: test;
+                        required]
   --ss-api-key TEXT     Storage Service API key  [default: test; required]
   --output-dir TEXT     Path to output directory  [default: mets_files;
                         required]
-  --sidecar             Write sidecar file for each METS with Storage Location
-                        and AIP replica UUIDs
-  --with-replicas-only  Only retrieve METS for an AIP if a replica has also
-                        been stored
+  --sidecar             Write sidecar file for each METS with Storage
+                        Location and AIP replica UUIDs
+  --with-replicas-only  Only retrieve METS for an AIP if a replica has 
+                        also been stored
   --help                Show this message and exit.
 
 ```
@@ -90,13 +92,15 @@ Usage: retrieve-mets fetch-one [OPTIONS] AIP_UUID
   Fetch single METS file, even if it's already been retrieved.
 
 Options:
-  --ss-url TEXT      Storage Service host URL  [default:
-                     http://127.0.0.1:62081; required]
-  --ss-api-key TEXT  Storage Service API key  [default: test; required]
-  --output-dir TEXT  Path to output directory  [default: mets_files; required]
-  --sidecar          Write sidecar file for each METS with Storage Location
-                     and AIP replica UUIDs
-  --help             Show this message and exit.
+  --ss-url TEXT       Storage Service host URL  [default:
+                      http://127.0.0.1:62081; required]
+  --ss-user-name TEXT Storage Service username  [default: test; required]
+  --ss-api-key TEXT   Storage Service API key  [default: test; required]
+  --output-dir TEXT   Path to output directory  [default: mets_files;
+                      required]
+  --sidecar           Write sidecar file for each METS with Storage 
+                      Location and AIP replica UUIDs
+  --help              Show this message and exit.
 
 ```
 
